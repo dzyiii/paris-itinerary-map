@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="10月1日至5日巴黎旅行路线地图：每日点位、交通建议与 Google Maps 导航。" />
+  <meta name="theme-color" content="#f7f3eb" />
+  <title>五日巴黎 · 行程地图</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23242d45'/%3E%3Cpath d='M32 10 22 51M32 10l10 41M25 34h14M19 51h26' fill='none' stroke='%23f4c978' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://tiles.openfreemap.org" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
+  <style>
+    :root {
+      --ink: #20283c;
+      --muted: #697184;
+      --paper: #f7f3eb;
+      --panel: rgba(255,255,255,.88);
+      --line: rgba(32,40,60,.12);
+      --accent: #e95d52;
+      --gold: #d7a84b;
+      --shadow: 0 24px 70px rgba(43, 48, 64, .14);
+      --day: #df655b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 5%, rgba(232,174,99,.22), transparent 28rem),
+        radial-gradient(circle at 86% 92%, rgba(92,119,152,.13), transparent 30rem),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .shell { max-width: 1480px; margin: 0 auto; padding: 22px; }
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(210px, 1fr) auto;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    .eyebrow { margin: 0 0 2px; color: var(--accent); font-size: .78rem; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+    h1 { margin: 0; font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 500; line-height: 1.05; letter-spacing: -.035em; }
+    .subtitle { margin: 8px 0 0; color: var(--muted); font-size: .95rem; }
+    .dates {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.58);
+      backdrop-filter: blur(14px);
+    }
+    .dates::-webkit-scrollbar { display: none; }
+    .day-btn {
+      border: 0;
+      border-radius: 13px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      min-width: 78px;
+      padding: 10px 13px;
+      font: inherit;
+      font-weight: 750;
+      transition: .2s ease;
+    }
+    .day-btn:hover { color: var(--ink); background: rgba(255,255,255,.74); }
+    .day-btn.active { color: white; background: var(--ink); box-shadow: 0 8px 20px rgba(32,40,60,.2); }
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(330px, 410px) minmax(0, 1fr);
+      height: min(780px, calc(100vh - 150px));
+      min-height: 610px;
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .itinerary { overflow: auto; padding: 24px 22px 32px; border-right: 1px solid var(--line); scrollbar-width: thin; }
+    .day-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .day-kicker { color: var(--day); font-size: .77rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+    .day-title { margin: 3px 0 0; font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: 1.7rem; font-weight: 500; line-height: 1.2; }
+    .weather-note { padding: 7px 10px; border-radius: 999px; color: var(--muted); background: #f3f0e9; font-size: .76rem; white-space: nowrap; }
+    .timeline { position: relative; }
+    .stop { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 12px; }
+    .track { display: flex; flex-direction: column; align-items: center; }
+    .num {
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 10px 10px 10px 3px;
+      color: white;
+      background: var(--day);
+      box-shadow: 0 5px 14px color-mix(in srgb, var(--day) 35%, transparent);
+      font-size: .77rem;
+      font-weight: 850;
+    }
+    .stop.alt .num { color: var(--day); background: white; border: 2px dashed var(--day); box-shadow: none; }
+    .stem { width: 1px; flex: 1; min-height: 48px; background: linear-gradient(var(--day), rgba(32,40,60,.12)); }
+    .stop:last-child .stem { display: none; }
+    .stop-card { padding: 0 0 15px; min-width: 0; }
+    .time { margin-bottom: 3px; color: var(--muted); font-size: .76rem; font-weight: 800; letter-spacing: .04em; }
+    .place-link { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); text-decoration: none; font-size: 1rem; font-weight: 820; }
+    .place-link:hover { color: var(--day); }
+    .place-link::after { content: "↗"; font-size: .75rem; opacity: .5; }
+    .meta { margin: 4px 0 0; color: var(--muted); font-size: .78rem; line-height: 1.45; }
+    .coords { font-variant-numeric: tabular-nums; opacity: .82; }
+    .choice { display: inline-block; margin-left: 5px; padding: 2px 7px; border-radius: 999px; color: #97572e; background: #fff0da; font-size: .68rem; font-weight: 850; vertical-align: 2px; }
+    .transfer { display: flex; align-items: center; gap: 7px; margin: 0 0 14px 46px; color: #596174; font-size: .76rem; }
+    .transfer::before { content: ""; width: 20px; border-top: 1px dashed rgba(32,40,60,.28); }
+    .mode { padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px; background: white; font-weight: 760; }
+    .map-wrap { position: relative; min-width: 0; min-height: 0; }
+    #map { width: 100%; height: 100%; background: #dce5e8; }
+    .map-note {
+      position: absolute;
+      z-index: 800;
+      right: 16px;
+      top: 16px;
+      width: min(280px, calc(100% - 32px));
+      padding: 11px 13px;
+      border: 1px solid rgba(255,255,255,.85);
+      border-radius: 15px;
+      color: #475064;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 8px 24px rgba(29,39,56,.12);
+      backdrop-filter: blur(12px);
+      font-size: .76rem;
+    }
+    .legend { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend i { width: 9px; height: 9px; border-radius: 50%; background: var(--day); }
+    .legend .alt-dot { background: white; border: 2px dashed var(--day); }
+    .leaflet-control-zoom { border: 0 !important; box-shadow: 0 8px 25px rgba(29,39,56,.14) !important; }
+    .leaflet-control-zoom a { color: var(--ink) !important; border: 0 !important; }
+    .leaflet-control-attribution { font-size: 9px !important; }
+    .route-label {
+      padding: 4px 7px;
+      border: 0;
+      border-radius: 999px;
+      color: #3e4657;
+      background: rgba(255,255,255,.93);
+      box-shadow: 0 4px 13px rgba(30,37,51,.16);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .route-label::before { display: none; }
+    .pin-wrap { background: transparent; border: 0; }
+    .pin { position: relative; display: grid; place-items: center; width: 34px; height: 34px; border: 3px solid white; border-radius: 12px 12px 12px 4px; color: white; background: var(--pin); box-shadow: 0 7px 18px rgba(28,34,48,.25); font-size: 12px; font-weight: 900; transform: rotate(-45deg); }
+    .pin b { transform: rotate(45deg); }
+    .pin.altpin { color: var(--pin); background: white; border-color: var(--pin); border-style: dashed; }
+    .map-place-label { margin-left: 15px !important; padding: 5px 8px; border: 0; border-radius: 9px; color: #232a3d; background: rgba(255,255,255,.92); box-shadow: 0 4px 12px rgba(32,40,60,.14); font-size: 11px; font-weight: 800; }
+    .map-place-label::before { display: none; }
+    .popup h3 { margin: 0 0 4px; font-size: .95rem; }
+    .popup p { margin: 0 0 8px; color: #697184; font-size: .76rem; }
+    .popup a { color: #c94e45; font-weight: 800; text-decoration: none; }
+    .foot { display: flex; justify-content: space-between; gap: 16px; margin: 13px 4px 0; color: #747b89; font-size: .75rem; }
+    .foot strong { color: var(--ink); }
+    .fallback { display: none; height: 100%; place-items: center; padding: 40px; text-align: center; color: var(--muted); }
+    @media (max-width: 900px) {
+      .shell { padding: 16px; }
+      .topbar { grid-template-columns: 1fr; align-items: start; }
+      .dates { width: 100%; }
+      .workspace { grid-template-columns: 1fr; height: auto; min-height: 0; overflow: visible; }
+      .itinerary { max-height: none; overflow: visible; border-right: 0; border-bottom: 1px solid var(--line); }
+      .map-wrap { height: 58vh; min-height: 430px; }
+      .map-note { top: 12px; right: 12px; }
+      .foot { flex-direction: column; gap: 3px; }
+    }
+    @media (max-width: 520px) {
+      .shell { padding: 12px; }
+      .subtitle { font-size: .86rem; }
+      .workspace { border-radius: 20px; }
+      .itinerary { padding: 20px 16px 26px; }
+      .weather-note { display: none; }
+      .day-btn { min-width: 66px; padding: 9px 10px; }
+      .map-wrap { height: 62vh; min-height: 390px; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Paris · 01—05 OCT</p>
+        <h1>五日巴黎，沿路慢慢走。</h1>
+        <p class="subtitle">选择日期，只看当天的点位、顺序与推荐交通。点击地点即可在 Google Maps 打开。</p>
+      </div>
+      <nav class="dates" aria-label="选择日期" id="dateTabs"></nav>
+    </header>
+
+    <section class="workspace" aria-live="polite">
+      <aside class="itinerary">
+        <div class="day-head">
+          <div>
+            <div class="day-kicker" id="dayKicker"></div>
+            <h2 class="day-title" id="dayTitle"></h2>
+          </div>
+          <span class="weather-note">时间为建议节奏</span>
+        </div>
+        <div class="timeline" id="timeline"></div>
+      </aside>
+      <div class="map-wrap">
+        <div id="map" aria-label="巴黎每日行程地图"></div>
+        <div class="fallback" id="fallback">地图需要联网加载。行程与 Google Maps 链接仍可在左侧正常使用。</div>
+        <div class="map-note">
+          <strong id="mapSummary">今日路线</strong><br />
+          地图连线用于展示游览顺序；实际道路与车程以出发时导航为准。
+          <div class="legend"><span><i></i>主行程</span><span><i class="alt-dot"></i>候补 / 可选</span></div>
+        </div>
+      </div>
+    </section>
+    <footer class="foot">
+      <span><strong>住宿：</strong>10/1–10/3 Hôtel Elysées Paris · 10/3–10/5 78 Avenue des Champs-Élysées</span>
+      <span>底图 © OpenFreeMap · 数据 © OpenStreetMap · 无需 API Key</span>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
+  <script>
+    const COLORS = ['#df655b','#477b78','#cb8a37','#6d65a8','#3f7398'];
+    const days = [
+      {
+        id:'10/1', kicker:'DAY 01 · 抵达', title:'灯亮之后，抵达巴黎',
+        stops:[
+          {time:'22:00', name:'巴黎戴高乐机场 CDG', note:'默认按 CDG 标注；请按实际航班确认机场', lat:49.00969, lng:2.54792, query:'Paris Charles de Gaulle Airport'},
+          {time:'约 23:00', name:'Hôtel Elysées Paris', note:'第一家酒店 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, Paris'}
+        ], transfers:[{mode:'出租车 / 网约车', mins:'约 45–60 分钟'}]
+      },
+      {
+        id:'10/2', kicker:'DAY 02 · 经典巴黎', title:'歌剧院、甜点与卢浮宫',
+        stops:[
+          {time:'08:50', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, Paris'},
+          {time:'09:30', name:'巴黎歌剧院 Palais Garnier', note:'8 Rue Scribe, 75009 Paris', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
+          {time:'11:15', name:'Yazid Ichemrahen · At Home', note:'44 Rue Croix des Petits Champs, 75001 Paris', lat:48.86473, lng:2.33916, query:'Yazid Ichemrahen At Home Paris'},
+          {time:'13:00', name:'卢浮宫 Musée du Louvre', note:'建议按预约入口预留排队时间', lat:48.86061, lng:2.33764, query:'Musée du Louvre Paris'},
+          {time:'19:30', name:'Le Bon Georges', note:'晚餐首选 · 45 Rue Saint-Georges, 75009 Paris', lat:48.87872, lng:2.33718, query:'Le Bon Georges Paris'},
+          {time:'19:30', name:'Mieux', note:'Le Bon Georges 无位时的候补 · 21 Rue Saint-Lazare', lat:48.87668, lng:2.33753, query:'Mieux 21 Rue Saint-Lazare Paris', alt:true, branchFrom:3}
+        ],
+        transfers:[
+          {mode:'地铁', mins:'约 20 分钟'},
+          {mode:'出租车', mins:'约 12 分钟'},
+          {mode:'步行', mins:'约 8 分钟'},
+          {mode:'地铁', mins:'约 20 分钟'}
+        ]
+      },
+      {
+        id:'10/3', kicker:'DAY 03 · 左岸到塞纳河', title:'花园、艺术与夜游',
+        stops:[
+          {time:'08:20', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 当天换至第二家住宿', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, Paris'},
+          {time:'09:00', name:'卢森堡公园', note:'Jardin du Luxembourg', lat:48.84622, lng:2.33716, query:'Jardin du Luxembourg Paris'},
+          {time:'10:30', name:'蒙帕纳斯公墓', note:'3 Boulevard Edgar Quinet, 75014 Paris', lat:48.83709, lng:2.32700, query:'Montparnasse Cemetery Paris'},
+          {time:'12:30', name:'Loulou Paris', note:'午餐 · 107 Rue de Rivoli, 75001 Paris', lat:48.86277, lng:2.33418, query:'Loulou Paris 107 Rue de Rivoli'},
+          {time:'15:00', name:'橘园美术馆', note:'Musée de l’Orangerie · 杜乐丽花园西端', lat:48.86379, lng:2.32266, query:'Musée de l’Orangerie Paris'},
+          {time:'16:15', name:'海军府 Hôtel de la Marine', note:'2 Place de la Concorde, 75008 Paris', lat:48.86613, lng:2.32338, query:'Hôtel de la Marine Paris'},
+          {time:'17:30', name:'Hôtel de Crillon · Rosewood', note:'下午茶 · 10 Place de la Concorde', lat:48.86753, lng:2.32151, query:'Hôtel de Crillon A Rosewood Hotel Paris'},
+          {time:'19:00', name:'香榭丽舍大街公寓', note:'第二家住宿 · 78 Avenue des Champs-Élysées', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées Paris'},
+          {time:'20:15', name:'Bateau Boréas · Port Debilly', note:'夜游集合点 · 请以预订确认信息为准', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'}
+        ],
+        transfers:[
+          {mode:'出租车', mins:'约 25 分钟'},
+          {mode:'步行', mins:'约 17 分钟'}, {mode:'出租车', mins:'约 15 分钟'}, {mode:'步行', mins:'约 12 分钟'},
+          {mode:'步行', mins:'约 6 分钟'}, {mode:'步行', mins:'约 3 分钟'}, {mode:'步行', mins:'约 20 分钟'}, {mode:'出租车', mins:'约 10 分钟'}
+        ]
+      },
+      {
+        id:'10/4', kicker:'DAY 04 · 铁塔到蒙马特', title:'一只可颂，两次日落',
+        stops:[
+          {time:'08:05', name:'香榭丽舍大街公寓', note:'从第二家住宿出发 · 78 Avenue des Champs-Élysées', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées Paris'},
+          {time:'08:30', name:'Gast Baker’s House', note:'早餐 · 16 Avenue de la Motte-Picquet', lat:48.85622, lng:2.30793, query:"Gast Baker's House Paris 7"},
+          {time:'09:30', name:"L'Howea", note:'第一处铁塔拍照 · 18 Avenue Rapp', lat:48.85904, lng:2.30011, query:"L'Howea 18 Avenue Rapp Paris"},
+          {time:'10:00', name:'Bateau Boréas / Port Debilly', note:'河岸铁塔拍照点', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'},
+          {time:'12:00', name:'自由活动 · Cédric Grolet Opéra', note:'可选甜点站 · 35 Avenue de l’Opéra', lat:48.86820, lng:2.33347, query:'Cédric Grolet Opéra Paris', optional:true},
+          {time:'16:25', name:'蒙马特缆车下站 · Gare Basse', note:'从 Place Suzanne-Valadon 入口乘缆车上山，避开 Rue Foyatier 长石阶', lat:48.88469, lng:2.34266, query:'Funiculaire Gare Basse Montmartre Paris'},
+          {time:'16:30', name:'蒙马特 · 沉没的房子视角', note:'Square Louise Michel 石阶附近的错视拍照点', lat:48.88535, lng:2.34264, query:'Sinking House Montmartre Paris'},
+          {time:'18:00', name:'圣心堂 Sacré-Cœur', note:'留到日落；日落时间请在出发前复核', lat:48.88670, lng:2.34310, query:'Sacré-Cœur Paris'}
+        ],
+        transfers:[
+          {mode:'出租车', mins:'约 12 分钟'},
+          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 12 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
+          {mode:'地铁', mins:'约 25 分钟'}, {mode:'蒙马特缆车 + 步行', mins:'约 5 分钟'}, {mode:'步行', mins:'约 5 分钟'}
+        ]
+      },
+      {
+        id:'10/5', kicker:'DAY 05 · 返程', title:'早餐，然后带着巴黎回家',
+        stops:[
+          {time:'08:30', name:'香榭丽舍大街公寓', note:'早餐、整理行李与退房', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées Paris'},
+          {time:'按航班倒推', name:'巴黎戴高乐机场 CDG', note:'建议国际航班至少提前 3 小时抵达', lat:49.00969, lng:2.54792, query:'Paris Charles de Gaulle Airport'}
+        ], transfers:[{mode:'出租车 / 网约车', mins:'约 45–60 分钟'}]
+      }
+    ];
+
+    const tabs = document.getElementById('dateTabs');
+    const timeline = document.getElementById('timeline');
+    const kicker = document.getElementById('dayKicker');
+    const title = document.getElementById('dayTitle');
+    const summary = document.getElementById('mapSummary');
+    let map, activeLayers = [];
+
+    days.forEach((day, i) => {
+      const button = document.createElement('button');
+      button.className = 'day-btn' + (i === 0 ? ' active' : '');
+      button.textContent = day.id;
+      button.type = 'button';
+      button.setAttribute('aria-label', `查看 ${day.id} 行程`);
+      button.addEventListener('click', () => renderDay(i));
+      tabs.appendChild(button);
+    });
+
+    function mapsUrl(stop) {
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.query || `${stop.lat},${stop.lng}`)}`;
+    }
+
+    function renderTimeline(day) {
+      timeline.innerHTML = '';
+      day.stops.forEach((stop, i) => {
+        const item = document.createElement('article');
+        item.className = 'stop' + (stop.alt ? ' alt' : '');
+        item.innerHTML = `
+          <div class="track"><span class="num">${stop.alt ? '＋' : i + 1}</span><span class="stem"></span></div>
+          <div class="stop-card">
+            <div class="time">${stop.time}${stop.alt ? '<span class="choice">候补</span>' : stop.optional ? '<span class="choice">可选</span>' : ''}</div>
+            <a class="place-link" href="${mapsUrl(stop)}" target="_blank" rel="noopener noreferrer">${stop.name}</a>
+            <p class="meta">${stop.note}<br><span class="coords">${stop.lat.toFixed(5)}, ${stop.lng.toFixed(5)}</span></p>
+          </div>`;
+        timeline.appendChild(item);
+        if (i < day.transfers.length && day.stops[i + 1] && !day.stops[i + 1].alt) {
+          const transfer = day.transfers[i];
+          const row = document.createElement('div');
+          row.className = 'transfer';
+          row.innerHTML = `<span class="mode">${transfer.mode}</span><span>${transfer.mins}</span>`;
+          timeline.appendChild(row);
+        }
+      });
+    }
+
+    function clearMap() {
+      activeLayers.forEach(layer => map.removeLayer(layer));
+      activeLayers = [];
+    }
+
+    function midpoint(a, b) { return [(a.lat + b.lat) / 2, (a.lng + b.lng) / 2]; }
+
+    function renderMap(day, dayIndex) {
+      if (!map) return;
+      clearMap();
+      const color = COLORS[dayIndex];
+      document.documentElement.style.setProperty('--day', color);
+
+      day.stops.forEach((stop, i) => {
+        const icon = L.divIcon({
+          className:'pin-wrap', iconSize:[34,34], iconAnchor:[17,29], popupAnchor:[0,-30],
+          html:`<span class="pin ${stop.alt ? 'altpin' : ''}" style="--pin:${color}"><b>${stop.alt ? '＋' : i + 1}</b></span>`
+        });
+        const marker = L.marker([stop.lat, stop.lng], {icon}).addTo(map);
+        marker.bindTooltip(stop.name, {permanent:true, direction:'right', className:'map-place-label', offset:[9,-7]});
+        marker.bindPopup(`<div class="popup"><h3>${stop.name}</h3><p>${stop.note}<br>${stop.lat.toFixed(5)}, ${stop.lng.toFixed(5)}</p><a href="${mapsUrl(stop)}" target="_blank" rel="noopener">在 Google Maps 打开 ↗</a></div>`);
+        activeLayers.push(marker);
+      });
+
+      const mainStops = day.stops.filter(s => !s.alt);
+      if (mainStops.length > 1) {
+        const line = L.polyline(mainStops.map(s => [s.lat,s.lng]), {color, weight:4, opacity:.72, lineCap:'round'}).addTo(map);
+        activeLayers.push(line);
+      }
+
+      day.stops.forEach((stop, i) => {
+        if (!stop.alt) return;
+        const origin = day.stops[stop.branchFrom ?? Math.max(0, i - 1)];
+        const branch = L.polyline([[origin.lat,origin.lng],[stop.lat,stop.lng]], {color, weight:2.5, opacity:.65, dashArray:'5 7'}).addTo(map);
+        activeLayers.push(branch);
+      });
+
+      let mainIndex = 0;
+      for (let i = 0; i < day.stops.length - 1; i++) {
+        if (day.stops[i].alt || day.stops[i+1].alt) continue;
+        const tr = day.transfers[Math.min(mainIndex, day.transfers.length - 1)];
+        if (tr) {
+          const label = L.tooltip({permanent:true, direction:'center', className:'route-label', opacity:1})
+            .setLatLng(midpoint(day.stops[i], day.stops[i+1]))
+            .setContent(`${tr.mode} · ${tr.mins.replace('约 ','')}`).addTo(map);
+          activeLayers.push(label);
+        }
+        mainIndex++;
+      }
+
+      const bounds = L.latLngBounds(day.stops.map(s => [s.lat,s.lng]));
+      map.fitBounds(bounds, {padding:[62,62], maxZoom:15});
+      summary.textContent = `${day.id} · ${mainStops.length} 个主行程点`;
+    }
+
+    function renderDay(index) {
+      const day = days[index];
+      document.documentElement.style.setProperty('--day', COLORS[index]);
+      [...tabs.children].forEach((b, i) => {
+        b.classList.toggle('active', i === index);
+        b.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+      });
+      kicker.textContent = day.kicker;
+      title.textContent = day.title;
+      renderTimeline(day);
+      renderMap(day, index);
+      if (window.innerWidth <= 900) document.querySelector('.itinerary').scrollTop = 0;
+    }
+
+    if (window.L) {
+      map = L.map('map', {zoomControl:false, scrollWheelZoom:true, minZoom:4}).setView([48.8647,2.3266], 13);
+      L.control.zoom({position:'bottomright'}).addTo(map);
+      if (L.maplibreGL) {
+        L.maplibreGL({style:'https://tiles.openfreemap.org/styles/positron'}).addTo(map);
+      } else {
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom:19,
+          attribution:'Tiles &copy; Esri · Data &copy; OpenStreetMap contributors'
+        }).addTo(map);
+      }
+      renderDay(0);
+    } else {
+      document.getElementById('map').style.display = 'none';
+      document.getElementById('fallback').style.display = 'grid';
+      renderDay(0);
+    }
+  </script>
+</body>
+</html>
