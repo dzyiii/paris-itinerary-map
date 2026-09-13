@@ -281,10 +281,28 @@
         ], transfers:[{mode:'RER B + 地铁', mins:'约 60–70 分钟'}]
       },
       {
-        id:'10/2', kicker:'DAY 02 · 左岸与蒙马特', title:'可颂、花园与山丘日落',
+        id:'10/2', kicker:'DAY 02 · 卢浮宫与协和广场', title:'名作、花园与法甜时光',
         stops:[
-          {time:'08:30', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
-          {time:'09:00', name:'Gast Baker’s House', note:'早餐 / 可颂 · 16 Avenue de la Motte-Picquet', hours:'营业提示：周五 08:00 开门', lat:48.85660, lng:2.30841, query:"Gast Baker's House, 16 Avenue de la Motte-Picquet, Paris", minor:true},
+          {time:'08:50', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
+          {time:'09:30', name:'卢浮宫 Musée du Louvre', note:'建议按预约入口预留安检时间', hours:'营业提示：周五 09:00 开门，此时刚开馆不久', lat:48.86061, lng:2.33764, query:'Musée du Louvre Paris'},
+          {time:'12:30', name:'Loulou Paris', note:'午餐 · 107 Rue de Rivoli, 75001 Paris', lat:48.86277, lng:2.33418, query:'Loulou Paris, 107 Rue de Rivoli, Paris', minor:true},
+          {time:'14:30', name:'橘园美术馆', note:'Musée de l’Orangerie · 杜乐丽花园西端', lat:48.86379, lng:2.32266, query:'Musée de l’Orangerie Paris'},
+          {time:'16:00', name:'Jardin d’Hiver · Hôtel de Crillon', note:'Hôtel de Crillon / Rosewood；只简单坐下点两个单点法甜，不安排完整 Afternoon Tea', lat:48.86753, lng:2.32151, query:'Jardin d’Hiver Hôtel de Crillon Paris', minor:true},
+          {time:'17:15', name:'海军府 Hôtel de la Marine', note:'2 Place de la Concorde, 75008 Paris', lat:48.86613, lng:2.32338, query:'Hôtel de la Marine Paris'},
+          {time:'19:15', name:'Brasserie Flottes', note:'晚餐 · 2 Rue Cambon, 75001 Paris', lat:48.86690, lng:2.32546, query:'Brasserie Flottes, 2 Rue Cambon, Paris', minor:true}
+        ],
+        transfers:[
+          {mode:'地铁 1 号线', mins:'约 18 分钟'}, {mode:'步行', mins:'约 5 分钟'},
+          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 7 分钟'},
+          {mode:'步行', mins:'约 4 分钟'}, {mode:'步行', mins:'约 7 分钟'}
+        ]
+      },
+      {
+        id:'10/3', kicker:'DAY 03 · 左岸与蒙马特', title:'换好酒店，再去山丘看日落',
+        stops:[
+          {time:'08:00', name:'Hôtel Elysées Paris', note:'退房 · 携行李从第一家酒店出发', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
+          {time:'08:15', name:'78 Avenue des Champs-Élysées', note:'第二家住宿 · 先寄存行李，再轻装出发', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
+          {time:'09:00', name:'Gast Baker’s House', note:'早餐 / 可颂 · 16 Avenue de la Motte-Picquet', hours:'营业提示：周六 08:00 开门', lat:48.85660, lng:2.30841, query:"Gast Baker's House, 16 Avenue de la Motte-Picquet, Paris", minor:true},
           {time:'10:15', name:'卢森堡公园', note:'Jardin du Luxembourg · 从花园北侧或西侧进入', lat:48.84622, lng:2.33716, query:'Jardin du Luxembourg Paris'},
           {time:'11:30', name:'蒙帕纳斯公墓', note:'3 Boulevard Edgar Quinet, 75014 Paris', lat:48.83709, lng:2.32700, query:'Cimetière du Montparnasse Paris'},
           {time:'14:30', name:'巴黎歌剧院 Palais Garnier', note:'Place de l’Opéra, 75009 Paris', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
@@ -293,34 +311,14 @@
           {time:'17:25', name:'沉没的房子 · Sinking House', note:'圣心堂石阶附近的错视拍照点；这里不是 La Maison Rose 餐厅', lat:48.88655, lng:2.34257, query:'Sinking House Montmartre Paris', minor:true},
           {time:'日落前', name:'圣心堂 Sacré-Cœur', note:'看日落；具体日落时间请在出发前复核', lat:48.88670, lng:2.34310, query:'Basilique du Sacré-Cœur de Montmartre Paris'},
           {time:'19:45', name:'Le Bon Georges', note:'晚餐首选 · 45 Rue Saint-Georges, 75009 Paris', lat:48.87872, lng:2.33718, query:'Le Bon Georges, 45 Rue Saint-Georges, Paris', badge:'Plan A', badgeClass:'primary', minor:true},
-          {time:'19:45', name:'Mieux', note:'Plan A 无位时启用 · 21 Rue Saint-Lazare, 75009 Paris', lat:48.87668, lng:2.33753, query:'Mieux, 21 Rue Saint-Lazare, Paris', alt:true, badge:'Plan B', badgeClass:'backup', branchFrom:8, branchTransfer:{mode:'步行', mins:'约 22 分钟'}, minor:true}
+          {time:'19:45', name:'Mieux', note:'Plan A 无位时启用 · 21 Rue Saint-Lazare, 75009 Paris', lat:48.87668, lng:2.33753, query:'Mieux, 21 Rue Saint-Lazare, Paris', alt:true, badge:'Plan B', badgeClass:'backup', branchFrom:9, branchTransfer:{mode:'步行', mins:'约 22 分钟'}, minor:true}
         ],
         transfers:[
-          {mode:'地铁', mins:'约 25 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
-          {mode:'步行', mins:'约 18 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
-          {mode:'步行', mins:'约 7 分钟'}, {mode:'地铁', mins:'约 22 分钟'},
-          {mode:'缆车 + 步行', mins:'约 6 分钟'}, {mode:'步行', mins:'约 4 分钟'},
-          {mode:'步行', mins:'约 22 分钟'}
-        ]
-      },
-      {
-        id:'10/3', kicker:'DAY 03 · 艺术与协和广场', title:'换好酒店，再走进名作之间',
-        stops:[
-          {time:'08:00', name:'Hôtel Elysées Paris', note:'退房 · 携行李从第一家酒店出发', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
-          {time:'08:15', name:'78 Avenue des Champs-Élysées', note:'第二家住宿 · 先寄存行李，再轻装出发', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
-          {time:'09:30', name:'卢浮宫 Musée du Louvre', note:'建议按预约入口预留安检时间', hours:'营业提示：周六 09:00 开门，此时刚开馆不久', lat:48.86061, lng:2.33764, query:'Musée du Louvre Paris'},
-          {time:'12:30', name:'Loulou Paris', note:'午餐 · 107 Rue de Rivoli, 75001 Paris', lat:48.86277, lng:2.33418, query:'Loulou Paris, 107 Rue de Rivoli, Paris', minor:true},
-          {time:'14:30', name:'橘园美术馆', note:'Musée de l’Orangerie · 杜乐丽花园西端', lat:48.86379, lng:2.32266, query:'Musée de l’Orangerie Paris'},
-          {time:'16:00', name:'Jardin d’Hiver · Hôtel de Crillon', note:'Hôtel de Crillon / Rosewood；只简单坐下点两个单点法甜，不安排完整 Afternoon Tea', lat:48.86753, lng:2.32151, query:'Jardin d’Hiver Hôtel de Crillon Paris', minor:true},
-          {time:'17:15', name:'海军府 Hôtel de la Marine', note:'2 Place de la Concorde, 75008 Paris', lat:48.86613, lng:2.32338, query:'Hôtel de la Marine Paris'},
-          {time:'19:15', name:'Brasserie Flottes', note:'晚餐 · 2 Rue Cambon, 75001 Paris', lat:48.86690, lng:2.32546, query:'Brasserie Flottes, 2 Rue Cambon, Paris', minor:true},
-          {time:'晚餐后', name:'78 Avenue des Champs-Élysées', note:'回第二家住宿休息', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'}
-        ],
-        transfers:[
-          {mode:'出租车（携行李）', mins:'约 8 分钟'}, {mode:'地铁 1 号线', mins:'约 15 分钟'},
-          {mode:'步行', mins:'约 5 分钟'}, {mode:'步行', mins:'约 12 分钟'},
-          {mode:'步行', mins:'约 7 分钟'}, {mode:'步行', mins:'约 4 分钟'},
-          {mode:'步行', mins:'约 7 分钟'}, {mode:'地铁 1 号线', mins:'约 15 分钟'}
+          {mode:'出租车（携行李）', mins:'约 8 分钟'}, {mode:'地铁', mins:'约 20 分钟'},
+          {mode:'地铁', mins:'约 25 分钟'}, {mode:'步行', mins:'约 18 分钟'},
+          {mode:'地铁', mins:'约 25 分钟'}, {mode:'步行', mins:'约 7 分钟'},
+          {mode:'地铁', mins:'约 22 分钟'}, {mode:'缆车 + 步行', mins:'约 6 分钟'},
+          {mode:'步行', mins:'约 4 分钟'}, {mode:'步行', mins:'约 22 分钟'}
         ]
       },
       {
