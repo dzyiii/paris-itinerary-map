@@ -114,8 +114,25 @@
     .place-link:hover { color: var(--day); }
     .place-link::after { content: "↗"; font-size: .75rem; opacity: .5; }
     .meta { margin: 4px 0 0; color: var(--muted); font-size: .78rem; line-height: 1.45; }
-    .coords { font-variant-numeric: tabular-nums; opacity: .82; }
-    .choice { display: inline-block; margin-left: 5px; padding: 2px 7px; border-radius: 999px; color: #97572e; background: #fff0da; font-size: .68rem; font-weight: 850; vertical-align: 2px; }
+    .hours-alert {
+      display: block;
+      margin-top: 4px;
+      color: #c4554d;
+      font-weight: 780;
+    }
+    .hours-alert::before {
+      content: "";
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      vertical-align: 2px;
+    }
+    .choice { display: inline-block; margin-left: 6px; padding: 2px 7px; border-radius: 999px; color: #97572e; background: #fff0da; font-size: .68rem; font-weight: 850; vertical-align: 2px; }
+    .choice.primary { color: #28665f; background: #e8f4f1; }
+    .choice.backup { color: var(--day); background: color-mix(in srgb, var(--day) 10%, white); border: 1px dashed color-mix(in srgb, var(--day) 55%, white); }
     .transfer { display: flex; align-items: center; gap: 7px; margin: 0 0 14px 46px; color: #596174; font-size: .76rem; }
     .transfer::before { content: ""; width: 20px; border-top: 1px dashed rgba(32,40,60,.28); }
     .mode { padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px; background: white; font-weight: 760; }
@@ -140,6 +157,27 @@
     .legend span { display: inline-flex; align-items: center; gap: 5px; }
     .legend i { width: 9px; height: 9px; border-radius: 50%; background: var(--day); }
     .legend .alt-dot { background: white; border: 2px dashed var(--day); }
+    .map-filter {
+      position: absolute;
+      z-index: 800;
+      left: 16px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,.88);
+      border-radius: 999px;
+      color: #3f485b;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 8px 24px rgba(29,39,56,.14);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      font-size: .76rem;
+      font-weight: 800;
+      user-select: none;
+    }
+    .map-filter input { width: 16px; height: 16px; margin: 0; accent-color: var(--day); cursor: pointer; }
     .leaflet-control-zoom { border: 0 !important; box-shadow: 0 8px 25px rgba(29,39,56,.14) !important; }
     .leaflet-control-zoom a { color: var(--ink) !important; border: 0 !important; }
     .leaflet-control-attribution { font-size: 9px !important; }
@@ -175,6 +213,7 @@
       .itinerary { max-height: none; overflow: visible; border-right: 0; border-bottom: 1px solid var(--line); }
       .map-wrap { height: 58vh; min-height: 430px; }
       .map-note { top: 12px; right: 12px; }
+      .map-filter { left: 12px; bottom: 12px; }
       .foot { flex-direction: column; gap: 3px; }
     }
     @media (max-width: 520px) {
@@ -219,6 +258,7 @@
           地图连线用于展示游览顺序；实际道路与车程以出发时导航为准。
           <div class="legend"><span><i></i>主行程</span><span><i class="alt-dot"></i>候补 / 可选</span></div>
         </div>
+        <label class="map-filter"><input id="mainOnlyToggle" type="checkbox" />只看主要景点</label>
       </div>
     </section>
     <footer class="foot">
@@ -236,70 +276,79 @@
       {
         id:'10/1', kicker:'DAY 01 · 抵达', title:'灯亮之后，抵达巴黎',
         stops:[
-          {time:'22:00', name:'巴黎戴高乐机场 CDG', note:'默认按 CDG 标注；请按实际航班确认机场', lat:49.00969, lng:2.54792, query:'Paris Charles de Gaulle Airport'},
-          {time:'约 23:00', name:'Hôtel Elysées Paris', note:'第一家酒店 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, Paris'}
-        ], transfers:[{mode:'出租车 / 网约车', mins:'约 45–60 分钟'}]
+          {time:'22:00', name:'巴黎戴高乐机场 CDG', note:'抵达巴黎；请按实际航班确认航站楼', lat:49.00969, lng:2.54792, query:'Paris Charles de Gaulle Airport'},
+          {time:'约 23:00', name:'Hôtel Elysées Paris', note:'入住第一家酒店 · 1 Rue Brey, 75017 Paris；当晚不再安排正式行程', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'}
+        ], transfers:[{mode:'RER B + 地铁', mins:'约 60–70 分钟'}]
       },
       {
-        id:'10/2', kicker:'DAY 02 · 经典巴黎', title:'歌剧院、甜点与卢浮宫',
+        id:'10/2', kicker:'DAY 02 · 左岸与蒙马特', title:'可颂、花园与山丘日落',
         stops:[
-          {time:'08:50', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, Paris'},
-          {time:'09:30', name:'巴黎歌剧院 Palais Garnier', note:'8 Rue Scribe, 75009 Paris', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
-          {time:'11:15', name:'Yazid Ichemrahen · At Home', note:'44 Rue Croix des Petits Champs, 75001 Paris', lat:48.86473, lng:2.33916, query:'Yazid Ichemrahen At Home Paris'},
-          {time:'13:00', name:'卢浮宫 Musée du Louvre', note:'建议按预约入口预留排队时间', lat:48.86061, lng:2.33764, query:'Musée du Louvre Paris'},
-          {time:'19:30', name:'Le Bon Georges', note:'晚餐首选 · 45 Rue Saint-Georges, 75009 Paris', lat:48.87872, lng:2.33718, query:'Le Bon Georges Paris'},
-          {time:'19:30', name:'Mieux', note:'Le Bon Georges 无位时的候补 · 21 Rue Saint-Lazare', lat:48.87668, lng:2.33753, query:'Mieux 21 Rue Saint-Lazare Paris', alt:true, branchFrom:3}
+          {time:'08:30', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
+          {time:'09:00', name:'Gast Baker’s House', note:'早餐 / 可颂 · 16 Avenue de la Motte-Picquet', hours:'营业提示：周五 08:00 开门', lat:48.85660, lng:2.30841, query:"Gast Baker's House, 16 Avenue de la Motte-Picquet, Paris", minor:true},
+          {time:'10:15', name:'卢森堡公园', note:'Jardin du Luxembourg · 从花园北侧或西侧进入', lat:48.84622, lng:2.33716, query:'Jardin du Luxembourg Paris'},
+          {time:'11:30', name:'蒙帕纳斯公墓', note:'3 Boulevard Edgar Quinet, 75014 Paris', lat:48.83709, lng:2.32700, query:'Cimetière du Montparnasse Paris'},
+          {time:'14:30', name:'巴黎歌剧院 Palais Garnier', note:'Place de l’Opéra, 75009 Paris', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
+          {time:'16:15', name:'Cédric Grolet Opéra', note:'甜点 · 35 Avenue de l’Opéra, 75002 Paris', lat:48.86820, lng:2.33347, query:'Cédric Grolet Opéra, 35 Avenue de l’Opéra, Paris', minor:true},
+          {time:'17:15', name:'蒙马特缆车下站 · Gare Basse', note:'从 Place Suzanne-Valadon 入口乘缆车上山，避开 Rue Foyatier 长石阶', lat:48.88461, lng:2.34270, query:'Funiculaire de Montmartre Gare Basse Paris', minor:true},
+          {time:'17:25', name:'沉没的房子 · Sinking House', note:'圣心堂石阶附近的错视拍照点；这里不是 La Maison Rose 餐厅', lat:48.88655, lng:2.34257, query:'Sinking House Montmartre Paris', minor:true},
+          {time:'日落前', name:'圣心堂 Sacré-Cœur', note:'看日落；具体日落时间请在出发前复核', lat:48.88670, lng:2.34310, query:'Basilique du Sacré-Cœur de Montmartre Paris'},
+          {time:'19:45', name:'Le Bon Georges', note:'晚餐首选 · 45 Rue Saint-Georges, 75009 Paris', lat:48.87872, lng:2.33718, query:'Le Bon Georges, 45 Rue Saint-Georges, Paris', badge:'Plan A', badgeClass:'primary', minor:true},
+          {time:'19:45', name:'Mieux', note:'Plan A 无位时启用 · 21 Rue Saint-Lazare, 75009 Paris', lat:48.87668, lng:2.33753, query:'Mieux, 21 Rue Saint-Lazare, Paris', alt:true, badge:'Plan B', badgeClass:'backup', branchFrom:8, branchTransfer:{mode:'步行', mins:'约 22 分钟'}, minor:true}
         ],
         transfers:[
-          {mode:'地铁', mins:'约 20 分钟'},
-          {mode:'出租车', mins:'约 12 分钟'},
-          {mode:'步行', mins:'约 8 分钟'},
-          {mode:'地铁', mins:'约 20 分钟'}
+          {mode:'地铁', mins:'约 25 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
+          {mode:'步行', mins:'约 18 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
+          {mode:'步行', mins:'约 7 分钟'}, {mode:'地铁', mins:'约 22 分钟'},
+          {mode:'缆车 + 步行', mins:'约 6 分钟'}, {mode:'步行', mins:'约 4 分钟'},
+          {mode:'步行', mins:'约 22 分钟'}
         ]
       },
       {
-        id:'10/3', kicker:'DAY 03 · 左岸到塞纳河', title:'花园、艺术与夜游',
+        id:'10/3', kicker:'DAY 03 · 艺术与协和广场', title:'换好酒店，再走进名作之间',
         stops:[
-          {time:'08:20', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 当天换至第二家住宿', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, Paris'},
-          {time:'09:00', name:'卢森堡公园', note:'Jardin du Luxembourg', lat:48.84622, lng:2.33716, query:'Jardin du Luxembourg Paris'},
-          {time:'10:30', name:'蒙帕纳斯公墓', note:'3 Boulevard Edgar Quinet, 75014 Paris', lat:48.83709, lng:2.32700, query:'Montparnasse Cemetery Paris'},
-          {time:'12:30', name:'Loulou Paris', note:'午餐 · 107 Rue de Rivoli, 75001 Paris', lat:48.86277, lng:2.33418, query:'Loulou Paris 107 Rue de Rivoli'},
-          {time:'15:00', name:'橘园美术馆', note:'Musée de l’Orangerie · 杜乐丽花园西端', lat:48.86379, lng:2.32266, query:'Musée de l’Orangerie Paris'},
-          {time:'16:15', name:'海军府 Hôtel de la Marine', note:'2 Place de la Concorde, 75008 Paris', lat:48.86613, lng:2.32338, query:'Hôtel de la Marine Paris'},
-          {time:'17:30', name:'Hôtel de Crillon · Rosewood', note:'下午茶 · 10 Place de la Concorde', lat:48.86753, lng:2.32151, query:'Hôtel de Crillon A Rosewood Hotel Paris'},
-          {time:'19:00', name:'香榭丽舍大街公寓', note:'第二家住宿 · 78 Avenue des Champs-Élysées', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées Paris'},
-          {time:'20:15', name:'Bateau Boréas · Port Debilly', note:'夜游集合点 · 请以预订确认信息为准', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'}
+          {time:'08:00', name:'Hôtel Elysées Paris', note:'退房 · 携行李从第一家酒店出发', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
+          {time:'08:15', name:'78 Avenue des Champs-Élysées', note:'第二家住宿 · 先寄存行李，再轻装出发', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
+          {time:'09:30', name:'卢浮宫 Musée du Louvre', note:'建议按预约入口预留安检时间', hours:'营业提示：周六 09:00 开门，此时刚开馆不久', lat:48.86061, lng:2.33764, query:'Musée du Louvre Paris'},
+          {time:'12:30', name:'Loulou Paris', note:'午餐 · 107 Rue de Rivoli, 75001 Paris', lat:48.86277, lng:2.33418, query:'Loulou Paris, 107 Rue de Rivoli, Paris', minor:true},
+          {time:'14:30', name:'橘园美术馆', note:'Musée de l’Orangerie · 杜乐丽花园西端', lat:48.86379, lng:2.32266, query:'Musée de l’Orangerie Paris'},
+          {time:'16:00', name:'Jardin d’Hiver · Hôtel de Crillon', note:'Hôtel de Crillon / Rosewood；只简单坐下点两个单点法甜，不安排完整 Afternoon Tea', lat:48.86753, lng:2.32151, query:'Jardin d’Hiver Hôtel de Crillon Paris', minor:true},
+          {time:'17:15', name:'海军府 Hôtel de la Marine', note:'2 Place de la Concorde, 75008 Paris', lat:48.86613, lng:2.32338, query:'Hôtel de la Marine Paris'},
+          {time:'19:15', name:'Brasserie Flottes', note:'晚餐 · 2 Rue Cambon, 75001 Paris', lat:48.86690, lng:2.32546, query:'Brasserie Flottes, 2 Rue Cambon, Paris', minor:true},
+          {time:'晚餐后', name:'78 Avenue des Champs-Élysées', note:'回第二家住宿休息', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'}
         ],
         transfers:[
-          {mode:'出租车', mins:'约 25 分钟'},
-          {mode:'步行', mins:'约 17 分钟'}, {mode:'出租车', mins:'约 15 分钟'}, {mode:'步行', mins:'约 12 分钟'},
-          {mode:'步行', mins:'约 6 分钟'}, {mode:'步行', mins:'约 3 分钟'}, {mode:'步行', mins:'约 20 分钟'}, {mode:'出租车', mins:'约 10 分钟'}
+          {mode:'出租车（携行李）', mins:'约 8 分钟'}, {mode:'地铁 1 号线', mins:'约 15 分钟'},
+          {mode:'步行', mins:'约 5 分钟'}, {mode:'步行', mins:'约 12 分钟'},
+          {mode:'步行', mins:'约 7 分钟'}, {mode:'步行', mins:'约 4 分钟'},
+          {mode:'步行', mins:'约 7 分钟'}, {mode:'地铁 1 号线', mins:'约 15 分钟'}
         ]
       },
       {
-        id:'10/4', kicker:'DAY 04 · 铁塔到蒙马特', title:'一只可颂，两次日落',
+        id:'10/4', kicker:'DAY 04 · 香榭丽舍到铁塔', title:'橱窗、甜点与塞纳河夜色',
         stops:[
-          {time:'08:05', name:'香榭丽舍大街公寓', note:'从第二家住宿出发 · 78 Avenue des Champs-Élysées', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées Paris'},
-          {time:'08:30', name:'Gast Baker’s House', note:'早餐 · 16 Avenue de la Motte-Picquet', lat:48.85622, lng:2.30793, query:"Gast Baker's House Paris 7"},
-          {time:'09:30', name:"L'Howea", note:'第一处铁塔拍照 · 18 Avenue Rapp', lat:48.85904, lng:2.30011, query:"L'Howea 18 Avenue Rapp Paris"},
-          {time:'10:00', name:'Bateau Boréas / Port Debilly', note:'河岸铁塔拍照点', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'},
-          {time:'12:00', name:'自由活动 · Cédric Grolet Opéra', note:'可选甜点站 · 35 Avenue de l’Opéra', lat:48.86820, lng:2.33347, query:'Cédric Grolet Opéra Paris', optional:true},
-          {time:'16:25', name:'蒙马特缆车下站 · Gare Basse', note:'从 Place Suzanne-Valadon 入口乘缆车上山，避开 Rue Foyatier 长石阶', lat:48.88469, lng:2.34266, query:'Funiculaire Gare Basse Montmartre Paris'},
-          {time:'16:30', name:'蒙马特 · 沉没的房子视角', note:'Square Louise Michel 石阶附近的错视拍照点', lat:48.88535, lng:2.34264, query:'Sinking House Montmartre Paris'},
-          {time:'18:00', name:'圣心堂 Sacré-Cœur', note:'留到日落；日落时间请在出发前复核', lat:48.88670, lng:2.34310, query:'Sacré-Cœur Paris'}
+          {time:'09:45', name:'78 Avenue des Champs-Élysées', note:'从第二家住宿出发 · 今天以酒店周围慢逛为主', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
+          {time:'10:00', name:'凯旋门 Arc de Triomphe', note:'附近散步 / 拍照，不登顶', lat:48.87379, lng:2.29503, query:'Arc de Triomphe Paris'},
+          {time:'10:30', name:'香榭丽舍 · George V · Avenue Montaigne', note:'沿香榭丽舍回走，经 George V 一带进入蒙田大道，慢逛看橱窗', lat:48.86893, lng:2.30603, query:'Avenue Montaigne Paris', minor:true},
+          {time:'11:00', name:'Dior · 30 Montaigne', note:'30 Avenue Montaigne', hours:'营业提示：周日 11:00 开门，抵达时间正好是开门时间', lat:48.86634, lng:2.30633, query:'Dior 30 Montaigne Paris', minor:true},
+          {time:'11:40', name:'Grand Palais 大皇宫', note:'以建筑与公共区域为主，不安排长时间正式看展', lat:48.86610, lng:2.31245, query:'Grand Palais Paris'},
+          {time:'12:15', name:'Le Grand Café · Grand Palais', note:'坐下来喝咖啡 / 吃点东西', hours:'营业提示：每日 12:00 开门，抵达时刚开门不久', lat:48.86632, lng:2.31286, query:'Le Grand Café Grand Palais Paris', minor:true},
+          {time:'14:30', name:'Yazid Ichemrahen · At Home', note:'44 Rue Croix des Petits Champs, 75001 Paris', lat:48.86473, lng:2.33916, query:'Yazid Ichemrahen At Home, 44 Rue Croix des Petits Champs, Paris', minor:true},
+          {time:'16:30', name:"L'Howea", note:'第一处埃菲尔铁塔拍照点 · 18 Avenue Rapp, 75007 Paris；不登塔', lat:48.85904, lng:2.30011, query:"L'Howea, 18 Avenue Rapp, Paris"},
+          {time:'17:00 起', name:'Bateau Boréas / Port Debilly', note:'先在河岸拍照；傍晚 / 晚上在此参加塞纳河夜游，请以预订集合信息为准', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'}
         ],
         transfers:[
-          {mode:'出租车', mins:'约 12 分钟'},
-          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 12 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
-          {mode:'地铁', mins:'约 25 分钟'}, {mode:'蒙马特缆车 + 步行', mins:'约 5 分钟'}, {mode:'步行', mins:'约 5 分钟'}
+          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 22 分钟'},
+          {mode:'步行', mins:'约 6 分钟'}, {mode:'步行', mins:'约 12 分钟'},
+          {mode:'步行', mins:'约 3 分钟'}, {mode:'地铁 1 号线', mins:'约 20 分钟'},
+          {mode:'地铁', mins:'约 30 分钟'}, {mode:'步行', mins:'约 13 分钟'}
         ]
       },
       {
         id:'10/5', kicker:'DAY 05 · 返程', title:'早餐，然后带着巴黎回家',
         stops:[
-          {time:'08:30', name:'香榭丽舍大街公寓', note:'早餐、整理行李与退房', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées Paris'},
-          {time:'按航班倒推', name:'巴黎戴高乐机场 CDG', note:'建议国际航班至少提前 3 小时抵达', lat:49.00969, lng:2.54792, query:'Paris Charles de Gaulle Airport'}
-        ], transfers:[{mode:'出租车 / 网约车', mins:'约 45–60 分钟'}]
+          {time:'早上', name:'78 Avenue des Champs-Élysées', note:'早餐、整理行李并退房', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
+          {time:'按中午航班倒推', name:'巴黎戴高乐机场 CDG', note:'建议国际航班至少提前 3 小时抵达；请按实际航站楼调整', lat:49.00969, lng:2.54792, query:'Paris Charles de Gaulle Airport'}
+        ], transfers:[{mode:'地铁 1 号线 + RER B', mins:'约 60–70 分钟'}]
       }
     ];
 
@@ -308,7 +357,8 @@
     const kicker = document.getElementById('dayKicker');
     const title = document.getElementById('dayTitle');
     const summary = document.getElementById('mapSummary');
-    let map, activeLayers = [];
+    const mainOnlyToggle = document.getElementById('mainOnlyToggle');
+    let map, activeLayers = [], currentDayIndex = 0;
 
     days.forEach((day, i) => {
       const button = document.createElement('button');
@@ -327,14 +377,21 @@
     function renderTimeline(day) {
       timeline.innerHTML = '';
       day.stops.forEach((stop, i) => {
+        const badge = stop.badge
+          ? `<span class="choice ${stop.badgeClass || ''}">${stop.badge}</span>`
+          : stop.alt
+            ? '<span class="choice backup">候补</span>'
+            : stop.optional
+              ? '<span class="choice">可选</span>'
+              : '';
         const item = document.createElement('article');
         item.className = 'stop' + (stop.alt ? ' alt' : '');
         item.innerHTML = `
           <div class="track"><span class="num">${stop.alt ? '＋' : i + 1}</span><span class="stem"></span></div>
           <div class="stop-card">
-            <div class="time">${stop.time}${stop.alt ? '<span class="choice">候补</span>' : stop.optional ? '<span class="choice">可选</span>' : ''}</div>
+            <div class="time">${stop.time}${badge}</div>
             <a class="place-link" href="${mapsUrl(stop)}" target="_blank" rel="noopener noreferrer">${stop.name}</a>
-            <p class="meta">${stop.note}<br><span class="coords">${stop.lat.toFixed(5)}, ${stop.lng.toFixed(5)}</span></p>
+            <p class="meta">${stop.note}${stop.hours ? `<span class="hours-alert">${stop.hours}</span>` : ''}</p>
           </div>`;
         timeline.appendChild(item);
         if (i < day.transfers.length && day.stops[i + 1] && !day.stops[i + 1].alt) {
@@ -358,52 +415,67 @@
       if (!map) return;
       clearMap();
       const color = COLORS[dayIndex];
+      const mainOnly = mainOnlyToggle.checked;
+      const visibleStops = day.stops.filter(stop => !mainOnly || !stop.minor);
+      const routeStops = visibleStops.filter(stop => !stop.alt);
       document.documentElement.style.setProperty('--day', color);
 
-      day.stops.forEach((stop, i) => {
+      visibleStops.forEach(stop => {
+        const i = day.stops.indexOf(stop);
         const icon = L.divIcon({
           className:'pin-wrap', iconSize:[34,34], iconAnchor:[17,29], popupAnchor:[0,-30],
           html:`<span class="pin ${stop.alt ? 'altpin' : ''}" style="--pin:${color}"><b>${stop.alt ? '＋' : i + 1}</b></span>`
         });
         const marker = L.marker([stop.lat, stop.lng], {icon}).addTo(map);
         marker.bindTooltip(stop.name, {permanent:true, direction:'right', className:'map-place-label', offset:[9,-7]});
-        marker.bindPopup(`<div class="popup"><h3>${stop.name}</h3><p>${stop.note}<br>${stop.lat.toFixed(5)}, ${stop.lng.toFixed(5)}</p><a href="${mapsUrl(stop)}" target="_blank" rel="noopener">在 Google Maps 打开 ↗</a></div>`);
+        marker.bindPopup(`<div class="popup"><h3>${stop.name}</h3><p>${stop.note}${stop.hours ? `<br><strong>${stop.hours}</strong>` : ''}</p><a href="${mapsUrl(stop)}" target="_blank" rel="noopener">在 Google Maps 打开 ↗</a></div>`);
         activeLayers.push(marker);
       });
 
-      const mainStops = day.stops.filter(s => !s.alt);
-      if (mainStops.length > 1) {
-        const line = L.polyline(mainStops.map(s => [s.lat,s.lng]), {color, weight:4, opacity:.72, lineCap:'round'}).addTo(map);
+      if (routeStops.length > 1) {
+        const line = L.polyline(routeStops.map(s => [s.lat,s.lng]), {color, weight:4, opacity:.72, lineCap:'round'}).addTo(map);
         activeLayers.push(line);
       }
 
       day.stops.forEach((stop, i) => {
-        if (!stop.alt) return;
+        if (!stop.alt || !visibleStops.includes(stop)) return;
         const origin = day.stops[stop.branchFrom ?? Math.max(0, i - 1)];
+        if (!visibleStops.includes(origin)) return;
         const branch = L.polyline([[origin.lat,origin.lng],[stop.lat,stop.lng]], {color, weight:2.5, opacity:.65, dashArray:'5 7'}).addTo(map);
         activeLayers.push(branch);
-      });
-
-      let mainIndex = 0;
-      for (let i = 0; i < day.stops.length - 1; i++) {
-        if (day.stops[i].alt || day.stops[i+1].alt) continue;
-        const tr = day.transfers[Math.min(mainIndex, day.transfers.length - 1)];
-        if (tr) {
+        if (stop.branchTransfer) {
           const label = L.tooltip({permanent:true, direction:'center', className:'route-label', opacity:1})
-            .setLatLng(midpoint(day.stops[i], day.stops[i+1]))
-            .setContent(`${tr.mode} · ${tr.mins.replace('约 ','')}`).addTo(map);
+            .setLatLng(midpoint(origin, stop))
+            .setContent(`${stop.branchTransfer.mode} · ${stop.branchTransfer.mins.replace('约 ','')}`).addTo(map);
           activeLayers.push(label);
         }
-        mainIndex++;
+      });
+
+      if (!mainOnly) {
+        let mainIndex = 0;
+        for (let i = 0; i < day.stops.length - 1; i++) {
+          if (day.stops[i].alt || day.stops[i+1].alt) continue;
+          const tr = day.transfers[Math.min(mainIndex, day.transfers.length - 1)];
+          if (tr) {
+            const label = L.tooltip({permanent:true, direction:'center', className:'route-label', opacity:1})
+              .setLatLng(midpoint(day.stops[i], day.stops[i+1]))
+              .setContent(`${tr.mode} · ${tr.mins.replace('约 ','')}`).addTo(map);
+            activeLayers.push(label);
+          }
+          mainIndex++;
+        }
       }
 
-      const bounds = L.latLngBounds(day.stops.map(s => [s.lat,s.lng]));
+      const bounds = L.latLngBounds(visibleStops.map(s => [s.lat,s.lng]));
       map.fitBounds(bounds, {padding:[62,62], maxZoom:15});
-      summary.textContent = `${day.id} · ${mainStops.length} 个主行程点`;
+      summary.textContent = mainOnly
+        ? `${day.id} · ${routeStops.length} 个主要点（精简）`
+        : `${day.id} · ${routeStops.length} 个固定点`;
     }
 
     function renderDay(index) {
       const day = days[index];
+      currentDayIndex = index;
       document.documentElement.style.setProperty('--day', COLORS[index]);
       [...tabs.children].forEach((b, i) => {
         b.classList.toggle('active', i === index);
@@ -415,6 +487,8 @@
       renderMap(day, index);
       if (window.innerWidth <= 900) document.querySelector('.itinerary').scrollTop = 0;
     }
+
+    mainOnlyToggle.addEventListener('change', () => renderMap(days[currentDayIndex], currentDayIndex));
 
     if (window.L) {
       map = L.map('map', {zoomControl:false, scrollWheelZoom:true, minZoom:4}).setView([48.8647,2.3266], 13);
