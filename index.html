@@ -276,49 +276,49 @@
       {
         id:'10/1', kicker:'DAY 01 · 抵达', title:'灯亮之后，抵达巴黎',
         stops:[
-          {time:'22:00', name:'巴黎戴高乐机场 CDG', note:'抵达巴黎；请按实际航班确认航站楼', lat:49.00969, lng:2.54792, query:'Paris Charles de Gaulle Airport'},
-          {time:'约 23:00', name:'Hôtel Elysées Paris', note:'入住第一家酒店 · 1 Rue Brey, 75017 Paris；当晚不再安排正式行程', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'}
-        ], transfers:[{mode:'RER B + 地铁', mins:'约 60–70 分钟'}]
+          {time:'按车票时间', name:'Paris Gare de Lyon', note:'从尼斯乘火车抵达巴黎里昂车站', lat:48.84430, lng:2.37300, query:'Paris Gare de Lyon'},
+          {time:'抵达后', name:'Hôtel Elysées Paris', note:'入住第一家酒店 · 1 Rue Brey, 75017 Paris；当晚不再安排正式行程', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'}
+        ], transfers:[{mode:'地铁 1 号线', mins:'约 30 分钟'}]
       },
       {
-        id:'10/2', kicker:'DAY 02 · 卢浮宫与协和广场', title:'名作、花园与法甜时光',
+        id:'10/2', kicker:'DAY 02 · 卢浮宫与协和广场', title:'名作、花园与甜品小憩',
         stops:[
           {time:'08:50', name:'Hôtel Elysées Paris', note:'从第一家酒店出发 · 1 Rue Brey, 75017 Paris', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
           {time:'09:30', name:'卢浮宫 Musée du Louvre', note:'建议按预约入口预留安检时间', hours:'营业提示：周五 09:00 开门，此时刚开馆不久', lat:48.86061, lng:2.33764, query:'Musée du Louvre Paris'},
           {time:'12:30', name:'Loulou Paris', note:'午餐 · 107 Rue de Rivoli, 75001 Paris', lat:48.86277, lng:2.33418, query:'Loulou Paris, 107 Rue de Rivoli, Paris', minor:true},
           {time:'14:30', name:'橘园美术馆', note:'Musée de l’Orangerie · 杜乐丽花园西端', lat:48.86379, lng:2.32266, query:'Musée de l’Orangerie Paris'},
-          {time:'16:00', name:'Jardin d’Hiver · Hôtel de Crillon', note:'Hôtel de Crillon / Rosewood；只简单坐下点两个单点法甜，不安排完整 Afternoon Tea', lat:48.86753, lng:2.32151, query:'Jardin d’Hiver Hôtel de Crillon Paris', minor:true},
+          {time:'16:00', name:'Yazid Ichemrahen · At Home', note:'打车前往，单点甜品 · 44 Rue Croix des Petits Champs, 75001 Paris', lat:48.86473, lng:2.33916, query:'Yazid Ichemrahen At Home, 44 Rue Croix des Petits Champs, Paris', minor:true},
           {time:'17:15', name:'海军府 Hôtel de la Marine', note:'2 Place de la Concorde, 75008 Paris', lat:48.86613, lng:2.32338, query:'Hôtel de la Marine Paris'},
           {time:'19:15', name:'Brasserie Flottes', note:'晚餐 · 2 Rue Cambon, 75001 Paris', lat:48.86690, lng:2.32546, query:'Brasserie Flottes, 2 Rue Cambon, Paris', minor:true}
         ],
         transfers:[
           {mode:'地铁 1 号线', mins:'约 18 分钟'}, {mode:'步行', mins:'约 5 分钟'},
-          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 7 分钟'},
-          {mode:'步行', mins:'约 4 分钟'}, {mode:'步行', mins:'约 7 分钟'}
+          {mode:'步行', mins:'约 12 分钟'}, {mode:'出租车', mins:'约 15 分钟'},
+          {mode:'出租车', mins:'约 15 分钟'}, {mode:'步行', mins:'约 7 分钟'}
         ]
       },
       {
-        id:'10/3', kicker:'DAY 03 · 左岸与蒙马特', title:'换好酒店，再去山丘看日落',
+        id:'10/3', kicker:'DAY 03 · 左岸与蒙马特', title:'换好酒店，从花园走到山丘',
         stops:[
           {time:'08:00', name:'Hôtel Elysées Paris', note:'退房 · 携行李从第一家酒店出发', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
           {time:'08:15', name:'78 Avenue des Champs-Élysées', note:'第二家住宿 · 先寄存行李，再轻装出发', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
           {time:'09:00', name:'Gast Baker’s House', note:'早餐 / 可颂 · 16 Avenue de la Motte-Picquet', hours:'营业提示：周六 08:00 开门', lat:48.85660, lng:2.30841, query:"Gast Baker's House, 16 Avenue de la Motte-Picquet, Paris", minor:true},
           {time:'10:15', name:'卢森堡公园', note:'Jardin du Luxembourg · 从花园北侧或西侧进入', lat:48.84622, lng:2.33716, query:'Jardin du Luxembourg Paris'},
           {time:'11:30', name:'蒙帕纳斯公墓', note:'3 Boulevard Edgar Quinet, 75014 Paris', lat:48.83709, lng:2.32700, query:'Cimetière du Montparnasse Paris'},
-          {time:'14:30', name:'巴黎歌剧院 Palais Garnier', note:'Place de l’Opéra, 75009 Paris', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
-          {time:'16:15', name:'Cédric Grolet Opéra', note:'甜点 · 35 Avenue de l’Opéra, 75002 Paris', lat:48.86820, lng:2.33347, query:'Cédric Grolet Opéra, 35 Avenue de l’Opéra, Paris', minor:true},
-          {time:'17:15', name:'蒙马特缆车下站 · Gare Basse', note:'从 Place Suzanne-Valadon 入口乘缆车上山，避开 Rue Foyatier 长石阶', lat:48.88461, lng:2.34270, query:'Funiculaire de Montmartre Gare Basse Paris', minor:true},
-          {time:'17:25', name:'沉没的房子 · Sinking House', note:'圣心堂石阶附近的错视拍照点；这里不是 La Maison Rose 餐厅', lat:48.88655, lng:2.34257, query:'Sinking House Montmartre Paris', minor:true},
-          {time:'日落前', name:'圣心堂 Sacré-Cœur', note:'看日落；具体日落时间请在出发前复核', lat:48.88670, lng:2.34310, query:'Basilique du Sacré-Cœur de Montmartre Paris'},
+          {time:'13:30', name:'蒙马特缆车下站 · Gare Basse', note:'从 Place Suzanne-Valadon 入口乘缆车上山，避开 Rue Foyatier 长石阶', lat:48.88461, lng:2.34270, query:'Funiculaire de Montmartre Gare Basse Paris', minor:true},
+          {time:'13:40', name:'沉没的房子 · Sinking House', note:'圣心堂石阶附近的错视拍照点；这里不是 La Maison Rose 餐厅', lat:48.88655, lng:2.34257, query:'Sinking House Montmartre Paris', minor:true},
+          {time:'14:00', name:'圣心堂 Sacré-Cœur', note:'参观教堂并在蒙马特高地看城市景色', lat:48.88670, lng:2.34310, query:'Basilique du Sacré-Cœur de Montmartre Paris'},
+          {time:'15:20', name:'巴黎歌剧院 Palais Garnier', note:'Place de l’Opéra, 75009 Paris', hours:'营业提示：16:00 停止入场、17:00 闭馆，建议提前预约并准时抵达', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
+          {time:'16:45', name:'Cédric Grolet Opéra', note:'甜点 · 35 Avenue de l’Opéra, 75002 Paris', lat:48.86820, lng:2.33347, query:'Cédric Grolet Opéra, 35 Avenue de l’Opéra, Paris', minor:true},
           {time:'19:45', name:'Le Bon Georges', note:'晚餐首选 · 45 Rue Saint-Georges, 75009 Paris', lat:48.87872, lng:2.33718, query:'Le Bon Georges, 45 Rue Saint-Georges, Paris', badge:'Plan A', badgeClass:'primary', minor:true},
           {time:'19:45', name:'Mieux', note:'Plan A 无位时启用 · 21 Rue Saint-Lazare, 75009 Paris', lat:48.87668, lng:2.33753, query:'Mieux, 21 Rue Saint-Lazare, Paris', alt:true, badge:'Plan B', badgeClass:'backup', branchFrom:9, branchTransfer:{mode:'步行', mins:'约 22 分钟'}, minor:true}
         ],
         transfers:[
           {mode:'出租车（携行李）', mins:'约 8 分钟'}, {mode:'地铁', mins:'约 20 分钟'},
           {mode:'地铁', mins:'约 25 分钟'}, {mode:'步行', mins:'约 18 分钟'},
-          {mode:'地铁', mins:'约 25 分钟'}, {mode:'步行', mins:'约 7 分钟'},
-          {mode:'地铁', mins:'约 22 分钟'}, {mode:'缆车 + 步行', mins:'约 6 分钟'},
-          {mode:'步行', mins:'约 4 分钟'}, {mode:'步行', mins:'约 22 分钟'}
+          {mode:'地铁 12 号线', mins:'约 30–35 分钟'}, {mode:'缆车 + 步行', mins:'约 6 分钟'},
+          {mode:'步行', mins:'约 4 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
+          {mode:'步行', mins:'约 7 分钟'}, {mode:'步行', mins:'约 22 分钟'}
         ]
       },
       {
@@ -326,19 +326,27 @@
         stops:[
           {time:'09:45', name:'78 Avenue des Champs-Élysées', note:'从第二家住宿出发 · 今天以酒店周围慢逛为主', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
           {time:'10:00', name:'凯旋门 Arc de Triomphe', note:'附近散步 / 拍照，不登顶', lat:48.87379, lng:2.29503, query:'Arc de Triomphe Paris'},
-          {time:'10:30', name:'香榭丽舍 · George V · Avenue Montaigne', note:'沿香榭丽舍回走，经 George V 一带进入蒙田大道，慢逛看橱窗', lat:48.86893, lng:2.30603, query:'Avenue Montaigne Paris', minor:true},
+          {time:'10:30', name:'香榭丽舍 · George V', note:'从凯旋门沿香榭丽舍慢慢往回走', lat:48.87120, lng:2.30160, query:'Avenue des Champs-Élysées George V Paris', minor:true},
+          {time:'10:45', name:'Avenue Montaigne 蒙田大道', note:'逛街、看橱窗，再沿街步行去 Dior', lat:48.86905, lng:2.30717, query:'Avenue Montaigne Paris', minor:true},
           {time:'11:00', name:'Dior · 30 Montaigne', note:'30 Avenue Montaigne', hours:'营业提示：周日 11:00 开门，抵达时间正好是开门时间', lat:48.86634, lng:2.30633, query:'Dior 30 Montaigne Paris', minor:true},
           {time:'11:40', name:'Grand Palais 大皇宫', note:'以建筑与公共区域为主，不安排长时间正式看展', lat:48.86610, lng:2.31245, query:'Grand Palais Paris'},
           {time:'12:15', name:'Le Grand Café · Grand Palais', note:'坐下来喝咖啡 / 吃点东西', hours:'营业提示：每日 12:00 开门，抵达时刚开门不久', lat:48.86632, lng:2.31286, query:'Le Grand Café Grand Palais Paris', minor:true},
-          {time:'14:30', name:'Yazid Ichemrahen · At Home', note:'44 Rue Croix des Petits Champs, 75001 Paris', lat:48.86473, lng:2.33916, query:'Yazid Ichemrahen At Home, 44 Rue Croix des Petits Champs, Paris', minor:true},
-          {time:'16:30', name:"L'Howea", note:'第一处埃菲尔铁塔拍照点 · 18 Avenue Rapp, 75007 Paris；不登塔', lat:48.85904, lng:2.30011, query:"L'Howea, 18 Avenue Rapp, Paris"},
-          {time:'17:00 起', name:'Bateau Boréas / Port Debilly', note:'先在河岸拍照；傍晚 / 晚上在此参加塞纳河夜游，请以预订集合信息为准', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'}
+          {time:'14:00', name:'Jardin d’Hiver · Hôtel de Crillon', note:'Hôtel de Crillon / Rosewood；简单坐下吃两个单点法甜', lat:48.86753, lng:2.32151, query:'Jardin d’Hiver Hôtel de Crillon Paris', minor:true},
+          {time:'15:00', name:'Café Verlet', note:'从 Rosewood 步行前往，沿途顺便逛街 · 256 Rue Saint-Honoré', hours:'营业提示：官方目前标注周一至周六 10:00–19:00；10/4 是周日，可能不营业，请出发前确认', lat:48.86562, lng:2.32892, query:'Café Verlet, 256 Rue Saint-Honoré, Paris', minor:true},
+          {time:'17:30', name:"L'Howea", note:'第一处埃菲尔铁塔拍照点 · 18 Avenue Rapp, 75007 Paris；不登塔', lat:48.85904, lng:2.30011, query:"L'Howea, 18 Avenue Rapp, Paris"},
+          {time:'18:00', name:'Port Debilly / Bateau Boréas 拍照点', note:'河岸第二处埃菲尔铁塔机位；这里只拍照，不是夜游上船点', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'},
+          {time:'19:30 左右', name:'Bateaux-Mouches · Pont de l’Alma', note:'塞纳河夜游 · Port de la Conférence，阿尔玛桥右岸；约 1 小时、无需固定班次、现场按下一班乘坐', lat:48.86415, lng:2.30426, query:'Bateaux Mouches Port de la Conférence Pont de l’Alma Paris'},
+          {time:'夜游后', name:'Pierre Hermé · 86 Champs', note:'购买马卡龙伴手礼 · 86 Avenue des Champs-Élysées', lat:48.87069, lng:2.30481, query:'Pierre Hermé 86 Champs Paris', minor:true},
+          {time:'约 21:15', name:'78 Avenue des Champs-Élysées', note:'步行回第二家住宿', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'}
         ],
         transfers:[
-          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 22 分钟'},
-          {mode:'步行', mins:'约 6 分钟'}, {mode:'步行', mins:'约 12 分钟'},
-          {mode:'步行', mins:'约 3 分钟'}, {mode:'地铁 1 号线', mins:'约 20 分钟'},
-          {mode:'地铁', mins:'约 30 分钟'}, {mode:'步行', mins:'约 13 分钟'}
+          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 15 分钟'},
+          {mode:'步行', mins:'约 8 分钟'}, {mode:'步行', mins:'约 6 分钟'},
+          {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 3 分钟'},
+          {mode:'步行', mins:'约 10 分钟'}, {mode:'步行逛街', mins:'约 22 分钟'},
+          {mode:'地铁 + 步行', mins:'约 30 分钟'}, {mode:'步行', mins:'约 13 分钟'},
+          {mode:'步行', mins:'约 18 分钟'}, {mode:'步行', mins:'约 18 分钟'},
+          {mode:'步行', mins:'约 4 分钟'}
         ]
       },
       {
