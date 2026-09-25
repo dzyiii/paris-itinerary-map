@@ -114,6 +114,13 @@
     .place-link:hover { color: var(--day); }
     .place-link::after { content: "↗"; font-size: .75rem; opacity: .5; }
     .meta { margin: 4px 0 0; color: var(--muted); font-size: .78rem; line-height: 1.45; }
+    .place-title { display: inline-flex; color: var(--ink); font-size: 1rem; font-weight: 820; }
+    .dinner-options { display: grid; gap: 6px; margin-top: 8px; }
+    .dinner-option { display: grid; grid-template-columns: auto 1fr; gap: 7px; align-items: baseline; }
+    .dinner-option .choice { margin-left: 0; }
+    .dinner-option a { color: var(--ink); text-decoration: none; font-size: .79rem; font-weight: 800; }
+    .dinner-option a:hover { color: var(--day); }
+    .dinner-option small { display: block; color: var(--muted); font-size: .7rem; font-weight: 500; }
     .hours-alert {
       display: block;
       margin-top: 4px;
@@ -298,27 +305,31 @@
         ]
       },
       {
-        id:'10/3', kicker:'DAY 03 · 左岸与蒙马特', title:'换好酒店，从花园走到山丘',
+        id:'10/3', kicker:'DAY 03 · 左岸、歌剧院与蒙马特', title:'从花园走到山丘，在落日里收尾',
         stops:[
           {time:'08:00', name:'Hôtel Elysées Paris', note:'退房 · 携行李从第一家酒店出发', lat:48.87508, lng:2.29518, query:'Hôtel Elysées Paris, 1 Rue Brey, 75017 Paris'},
           {time:'08:15', name:'78 Avenue des Champs-Élysées', note:'第二家住宿 · 先寄存行李，再轻装出发', lat:48.87144, lng:2.30433, query:'78 Avenue des Champs-Élysées, 75008 Paris'},
           {time:'09:00', name:'Gast Baker’s House', note:'早餐 / 可颂 · 16 Avenue de la Motte-Picquet', hours:'营业提示：周六 08:00 开门', lat:48.85660, lng:2.30841, query:"Gast Baker's House, 16 Avenue de la Motte-Picquet, Paris", minor:true},
           {time:'10:15', name:'卢森堡公园', note:'Jardin du Luxembourg · 从花园北侧或西侧进入', lat:48.84622, lng:2.33716, query:'Jardin du Luxembourg Paris'},
           {time:'11:30', name:'蒙帕纳斯公墓', note:'3 Boulevard Edgar Quinet, 75014 Paris', lat:48.83709, lng:2.32700, query:'Cimetière du Montparnasse Paris'},
-          {time:'13:30', name:'蒙马特缆车下站 · Gare Basse', note:'从 Place Suzanne-Valadon 入口乘缆车上山，避开 Rue Foyatier 长石阶', lat:48.88461, lng:2.34270, query:'Funiculaire de Montmartre Gare Basse Paris', minor:true},
-          {time:'13:40', name:'沉没的房子 · Sinking House', note:'圣心堂石阶附近的错视拍照点；这里不是 La Maison Rose 餐厅', lat:48.88655, lng:2.34257, query:'Sinking House Montmartre Paris', minor:true},
-          {time:'14:00', name:'圣心堂 Sacré-Cœur', note:'参观教堂并在蒙马特高地看城市景色', lat:48.88670, lng:2.34310, query:'Basilique du Sacré-Cœur de Montmartre Paris'},
-          {time:'15:20', name:'巴黎歌剧院 Palais Garnier', note:'Place de l’Opéra, 75009 Paris', hours:'营业提示：16:00 停止入场、17:00 闭馆，建议提前预约并准时抵达', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
-          {time:'16:45', name:'Cédric Grolet Opéra', note:'甜点 · 35 Avenue de l’Opéra, 75002 Paris', lat:48.86820, lng:2.33347, query:'Cédric Grolet Opéra, 35 Avenue de l’Opéra, Paris', minor:true},
-          {time:'19:45', name:'Le Bon Georges', note:'晚餐首选 · 45 Rue Saint-Georges, 75009 Paris', lat:48.87872, lng:2.33718, query:'Le Bon Georges, 45 Rue Saint-Georges, Paris', badge:'Plan A', badgeClass:'primary', minor:true},
-          {time:'19:45', name:'Mieux', note:'Plan A 无位时启用 · 21 Rue Saint-Lazare, 75009 Paris', lat:48.87668, lng:2.33753, query:'Mieux, 21 Rue Saint-Lazare, Paris', alt:true, badge:'Plan B', badgeClass:'backup', branchFrom:9, branchTransfer:{mode:'步行', mins:'约 22 分钟'}, minor:true}
+          {time:'14:00', name:'巴黎歌剧院 Palais Garnier', note:'Place de l’Opéra, 75009 Paris · 午餐暂不设固定地点', lat:48.87197, lng:2.33160, query:'Palais Garnier Paris'},
+          {time:'15:30', name:'Cédric Grolet Opéra', note:'甜点 · 35 Avenue de l’Opéra, 75002 Paris', lat:48.86820, lng:2.33347, query:'Cédric Grolet Opéra, 35 Avenue de l’Opéra, Paris', minor:true},
+          {time:'17:10', name:'蒙马特缆车下站 · Gare Basse', note:'从 Place Suzanne-Valadon 入口乘缆车上山，避开 Rue Foyatier 长石阶', lat:48.88461, lng:2.34270, query:'Funiculaire de Montmartre Gare Basse Paris', minor:true},
+          {time:'17:25', name:'沉没的房子 · Sinking House', note:'圣心堂石阶附近的错视拍照点；这里不是 La Maison Rose 餐厅', lat:48.88655, lng:2.34257, query:'Sinking House Montmartre Paris', minor:true},
+          {time:'18:00', name:'圣心堂 Sacré-Cœur', note:'参观教堂并在蒙马特高地等待日落 · 当天预计约 19:25 日落', lat:48.88670, lng:2.34310, query:'Basilique du Sacré-Cœur de Montmartre Paris'},
+          {time:'20:00', name:'晚餐 · Plan A–D', note:'按订位情况四选一；均在巴黎 9 区一带', lat:48.87764, lng:2.33721, query:'Le Bon Georges, 45 Rue Saint-Georges, Paris', minor:true, options:[
+            {label:'Plan A', name:'Le Bon Georges', address:'45 Rue Saint-Georges', lat:48.87764, lng:2.33721, query:'Le Bon Georges, 45 Rue Saint-Georges, Paris'},
+            {label:'Plan B', name:'Mieux', address:'21 Rue Saint-Lazare', lat:48.87668, lng:2.33753, query:'Mieux, 21 Rue Saint-Lazare, Paris'},
+            {label:'Plan C', name:'Boletus', address:'10 Rue Saulnier', lat:48.87544, lng:2.34470, query:'Boletus, 10 Rue Saulnier, Paris'},
+            {label:'Plan D', name:'Abri Soba', address:'10 Rue Saulnier', lat:48.87544, lng:2.34470, query:'Abri Soba, 10 Rue Saulnier, Paris'}
+          ]}
         ],
         transfers:[
           {mode:'出租车（携行李）', mins:'约 8 分钟'}, {mode:'地铁', mins:'约 20 分钟'},
           {mode:'地铁', mins:'约 25 分钟'}, {mode:'步行', mins:'约 18 分钟'},
-          {mode:'地铁 12 号线', mins:'约 30–35 分钟'}, {mode:'缆车 + 步行', mins:'约 6 分钟'},
-          {mode:'步行', mins:'约 4 分钟'}, {mode:'地铁', mins:'约 25 分钟'},
-          {mode:'步行', mins:'约 7 分钟'}, {mode:'步行', mins:'约 22 分钟'}
+          {mode:'地铁', mins:'约 25 分钟'}, {mode:'步行', mins:'约 7 分钟'},
+          {mode:'地铁 + 步行', mins:'约 25–30 分钟'}, {mode:'缆车 + 步行', mins:'约 6 分钟'},
+          {mode:'步行', mins:'约 4 分钟'}, {mode:'地铁 + 步行', mins:'约 25–30 分钟'}
         ]
       },
       {
@@ -332,7 +343,7 @@
           {time:'11:40', name:'Grand Palais 大皇宫', note:'以建筑与公共区域为主，不安排长时间正式看展', lat:48.86610, lng:2.31245, query:'Grand Palais Paris'},
           {time:'12:15', name:'Le Grand Café · Grand Palais', note:'坐下来喝咖啡 / 吃点东西', hours:'营业提示：每日 12:00 开门，抵达时刚开门不久', lat:48.86632, lng:2.31286, query:'Le Grand Café Grand Palais Paris', minor:true},
           {time:'14:00', name:'Jardin d’Hiver · Hôtel de Crillon', note:'Hôtel de Crillon / Rosewood；简单坐下吃两个单点法甜', lat:48.86753, lng:2.32151, query:'Jardin d’Hiver Hôtel de Crillon Paris', minor:true},
-          {time:'15:00', name:'Café Verlet', note:'从 Rosewood 步行前往，沿途顺便逛街 · 256 Rue Saint-Honoré', hours:'营业提示：官方目前标注周一至周六 10:00–19:00；10/4 是周日，可能不营业，请出发前确认', lat:48.86562, lng:2.32892, query:'Café Verlet, 256 Rue Saint-Honoré, Paris', minor:true},
+          {time:'16:30', name:'Terres de Café · Bourdonnais', note:'精品咖啡 · 67 Avenue de la Bourdonnais；喝完顺路步行去 L’Howea', lat:48.85698, lng:2.30260, query:'Terres de Café, 67 Avenue de la Bourdonnais, Paris', minor:true},
           {time:'17:30', name:"L'Howea", note:'第一处埃菲尔铁塔拍照点 · 18 Avenue Rapp, 75007 Paris；不登塔', lat:48.85904, lng:2.30011, query:"L'Howea, 18 Avenue Rapp, Paris"},
           {time:'18:00', name:'Port Debilly / Bateau Boréas 拍照点', note:'河岸第二处埃菲尔铁塔机位；这里只拍照，不是夜游上船点', lat:48.86028, lng:2.29235, query:'Port Debilly Paris'},
           {time:'19:30 左右', name:'Bateaux-Mouches · Pont de l’Alma', note:'塞纳河夜游 · Port de la Conférence，阿尔玛桥右岸；约 1 小时、无需固定班次、现场按下一班乘坐', lat:48.86415, lng:2.30426, query:'Bateaux Mouches Port de la Conférence Pont de l’Alma Paris'},
@@ -343,8 +354,8 @@
           {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 15 分钟'},
           {mode:'步行', mins:'约 8 分钟'}, {mode:'步行', mins:'约 6 分钟'},
           {mode:'步行', mins:'约 12 分钟'}, {mode:'步行', mins:'约 3 分钟'},
-          {mode:'步行', mins:'约 10 分钟'}, {mode:'步行逛街', mins:'约 22 分钟'},
-          {mode:'地铁 + 步行', mins:'约 30 分钟'}, {mode:'步行', mins:'约 13 分钟'},
+          {mode:'步行', mins:'约 10 分钟'}, {mode:'地铁 8 号线 + 步行', mins:'约 25 分钟'},
+          {mode:'步行', mins:'约 8 分钟'}, {mode:'步行', mins:'约 13 分钟'},
           {mode:'步行', mins:'约 18 分钟'}, {mode:'步行', mins:'约 18 分钟'},
           {mode:'步行', mins:'约 4 分钟'}
         ]
@@ -392,12 +403,23 @@
               : '';
         const item = document.createElement('article');
         item.className = 'stop' + (stop.alt ? ' alt' : '');
+        const optionList = stop.options
+          ? `<div class="dinner-options">${stop.options.map((option, optionIndex) => `
+              <div class="dinner-option">
+                <span class="choice ${optionIndex === 0 ? 'primary' : 'backup'}">${option.label}</span>
+                <a href="${mapsUrl(option)}" target="_blank" rel="noopener noreferrer">${option.name}<small>${option.address}</small></a>
+              </div>`).join('')}</div>`
+          : '';
+        const place = stop.options
+          ? `<span class="place-title">${stop.name}</span>`
+          : `<a class="place-link" href="${mapsUrl(stop)}" target="_blank" rel="noopener noreferrer">${stop.name}</a>`;
         item.innerHTML = `
           <div class="track"><span class="num">${stop.alt ? '＋' : i + 1}</span><span class="stem"></span></div>
           <div class="stop-card">
             <div class="time">${stop.time}${badge}</div>
-            <a class="place-link" href="${mapsUrl(stop)}" target="_blank" rel="noopener noreferrer">${stop.name}</a>
+            ${place}
             <p class="meta">${stop.note}${stop.hours ? `<span class="hours-alert">${stop.hours}</span>` : ''}</p>
+            ${optionList}
           </div>`;
         timeline.appendChild(item);
         if (i < day.transfers.length && day.stops[i + 1] && !day.stops[i + 1].alt) {
@@ -428,14 +450,40 @@
 
       visibleStops.forEach(stop => {
         const i = day.stops.indexOf(stop);
+        const optionLinks = stop.options
+          ? `<div>${stop.options.map(option => `<a href="${mapsUrl(option)}" target="_blank" rel="noopener">${option.label} · ${option.name} ↗</a>`).join('<br>')}</div>`
+          : '';
         const icon = L.divIcon({
           className:'pin-wrap', iconSize:[34,34], iconAnchor:[17,29], popupAnchor:[0,-30],
           html:`<span class="pin ${stop.alt ? 'altpin' : ''}" style="--pin:${color}"><b>${stop.alt ? '＋' : i + 1}</b></span>`
         });
         const marker = L.marker([stop.lat, stop.lng], {icon}).addTo(map);
-        marker.bindTooltip(stop.name, {permanent:true, direction:'right', className:'map-place-label', offset:[9,-7]});
-        marker.bindPopup(`<div class="popup"><h3>${stop.name}</h3><p>${stop.note}${stop.hours ? `<br><strong>${stop.hours}</strong>` : ''}</p><a href="${mapsUrl(stop)}" target="_blank" rel="noopener">在 Google Maps 打开 ↗</a></div>`);
+        marker.bindTooltip(stop.options ? `${stop.name} · ${stop.options[0].name}` : stop.name, {permanent:true, direction:'right', className:'map-place-label', offset:[9,-7]});
+        marker.bindPopup(`<div class="popup"><h3>${stop.name}</h3><p>${stop.note}${stop.hours ? `<br><strong>${stop.hours}</strong>` : ''}</p>${optionLinks || `<a href="${mapsUrl(stop)}" target="_blank" rel="noopener">在 Google Maps 打开 ↗</a>`}</div>`);
         activeLayers.push(marker);
+      });
+
+      visibleStops.filter(stop => stop.options).forEach(stop => {
+        const stopIndex = day.stops.indexOf(stop);
+        const origin = day.stops[Math.max(0, stopIndex - 1)];
+        const grouped = new Map();
+        stop.options.slice(1).forEach(option => {
+          const key = `${option.lat.toFixed(5)},${option.lng.toFixed(5)}`;
+          if (!grouped.has(key)) grouped.set(key, []);
+          grouped.get(key).push(option);
+        });
+        grouped.forEach(options => {
+          const point = options[0];
+          const icon = L.divIcon({
+            className:'pin-wrap', iconSize:[34,34], iconAnchor:[17,29], popupAnchor:[0,-30],
+            html:`<span class="pin altpin" style="--pin:${color}"><b>＋</b></span>`
+          });
+          const marker = L.marker([point.lat, point.lng], {icon}).addTo(map);
+          marker.bindTooltip(options.map(option => `${option.label} · ${option.name}`).join(' / '), {permanent:true, direction:'right', className:'map-place-label', offset:[9,-7]});
+          marker.bindPopup(`<div class="popup"><h3>晚餐备选</h3>${options.map(option => `<a href="${mapsUrl(option)}" target="_blank" rel="noopener">${option.label} · ${option.name} ↗</a>`).join('<br>')}</div>`);
+          const branch = L.polyline([[origin.lat,origin.lng],[point.lat,point.lng]], {color, weight:2.5, opacity:.65, dashArray:'5 7'}).addTo(map);
+          activeLayers.push(marker, branch);
+        });
       });
 
       if (routeStops.length > 1) {
@@ -472,7 +520,8 @@
         }
       }
 
-      const bounds = L.latLngBounds(visibleStops.map(s => [s.lat,s.lng]));
+      const boundPoints = visibleStops.flatMap(stop => [[stop.lat,stop.lng], ...(stop.options || []).slice(1).map(option => [option.lat,option.lng])]);
+      const bounds = L.latLngBounds(boundPoints);
       map.fitBounds(bounds, {padding:[62,62], maxZoom:15});
       summary.textContent = mainOnly
         ? `${day.id} · ${routeStops.length} 个主要点（精简）`
